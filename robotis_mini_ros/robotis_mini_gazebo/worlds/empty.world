@@ -14,6 +14,6 @@
         <pose>0.827303 -0.795002 0.416431 0 0.275643 2.35619</pose>
         <view_controller>orbit</view_controller>
       </camera>
-    </gui
+    </gui>
   </world>
 </sdf>
