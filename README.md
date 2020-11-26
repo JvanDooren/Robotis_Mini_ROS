@@ -36,12 +36,11 @@
 
 ## Project Cost
 
-
-| **Item** | **Price** |
-|----------|-----------|
-|Robotis Mini	|~€500		|
-|Raspberry Pi 	|~€40		|
-|Pi Camera		|~€25		|
-|IMU (MPU6050)	|~€1-5		|
-|-				|			|
-|**Total**		|~€570		|# Robotis_Mini_ROS Repository
+| **Item** | **Price** | ✔️ / ❌|
+|----------|-----------|---------|
+|Robotis Mini	|~€500	|❌	|
+|Raspberry Pi	|~€40	|✔️	|
+|Pi Camera		|~€25	|❌	|
+|IMU (MPU6050)	|~€1-5	|❌	|
+|-				|		|	|
+|**Total**		|~€570	|❌	|
