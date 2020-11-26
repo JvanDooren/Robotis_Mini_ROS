@@ -7,9 +7,11 @@
 
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
-	* [lubuntu 16.04](https://releases.ubuntu-mate.org/archived/xenial/armhf/)  
-	**! Xenial 16.04 has been chosen because ROS Kinetic only supports 15.10 and 16.04 !**
-	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic/Installation/Ubuntu) 
+	* [Raspbian Stretch](https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/#sbc-setup)  
+	**! I wanted to use Ubuntu Xenial 16.04 but I have not been able to make that OS work correctly on the Pi.
+	Eventually I found an image made by Robotis for their WafflePi that's based on Raspbian stretch and has ROS Kinetic pre-installed!
+	There's also a image for the Pi 4 but it's using ROS Melodic and I don't know how much it differs from Kinetic so I'm playing it safe...**
+	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
 	
 ## Planning
