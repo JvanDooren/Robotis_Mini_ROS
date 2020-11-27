@@ -1,7 +1,16 @@
 # Robotis_Mini_ROS Repository
 
 ## Short Description
---text--
+I'm interested in humanoid robots, but most of the dev robots / robot kits are way to expensive.
+<br><br>
+Robotis creates a wide range of humanoid robots: from the really expensive Thormang and Darwin OP (>€8.000) series to the budget Darwin Mini (\~€500).
+<br><br>
+The Darwin Mini  uses dynamixel XL320 actuators, which are the smallest and cheapest smart servos from robotis.
+They're relatively cheap (\~€25) but have a lot of cool features (temp,voltage,torque control,etc...).
+<br>
+After some research it's clear that the Mini is the most popular and open humanoid robot kit on the market (for now...).
+<br><br>
+The plan for this project is to control the Robotis (Darwin) Mini using ROS
 
 ## Hardware & Software
 <details>
