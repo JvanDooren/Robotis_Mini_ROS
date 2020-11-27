@@ -1,10 +1,12 @@
 # Robotis_Mini_ROS Repository
 
-## About
-**txt here**
+## Short Description
+--text--
 
 ## Hardware & Software
-
+<details>
+  <summary>Click here</summary>
+	
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
 	* [Ubuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
@@ -13,9 +15,11 @@
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
 	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
-	
-## Planning
+</details>
 
+## Planning
+<details>
+  <summary>Click here</summary>
 * Robotis Mini
 	* buy
 	* build
@@ -35,6 +39,7 @@
 		* publish all info from servos,IMU,raspberry
 		* subcribe to get positions for servos
 	* implement OpenCV on Pi with camera
+</details>
 
 ## Project Cost
 
