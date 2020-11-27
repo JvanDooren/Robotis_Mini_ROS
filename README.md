@@ -12,6 +12,19 @@ After some research it's clear that the Mini is the most popular and open humano
 <br><br>
 The plan for this project is to control the Robotis (Darwin) Mini using ROS
 
+## Detailed Description
+<details>
+  <summary>Click to Expand</summary>
+	
+- I don't know yet if the code made by Martin will be useful as he used potpy and a direct connection to the servos to control his Mini.
+- I'm planning on using the OpenCM9.04 to send and recieve data from the servos and to ROS topics using ROSSerial.
+- The OpenCM9.04 will be connected to the Raspberry Pi using a usb cable and the Pi will be running all the ROS packages.
+- the MPU6050 will be connected to the OpenCM9.04, as it's just a fancy arduino board, and send important data to a ROS topic using ROSSerial.
+- A camera will be connected to the Pi for OpenCV.
+- The goal of this project is to learn more about humanoid robots and how to program them.
+
+</details>
+
 ## Hardware & Software
 <details>
   <summary>Click to Expand</summary>
@@ -24,6 +37,8 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
 	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
+* This project is a fork from the great work of [Roberto Martín Martín](https://github.com/roberto-martinmartin/robotis_mini).
+
 </details>
 
 ## 3D Printing
@@ -62,6 +77,14 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 		* publish all info from servos,IMU,raspberry
 		* subcribe to get positions for servos
 	* implement OpenCV on Pi with camera
+	
+* Advanced Programming
+	* implement FABRIK (Inverse Kinematic) in Mini movement
+	* Make Mini dynamicly stable using IMU data
+	* Make Mini walk using Fabrik
+	* Make Mini walk on (small) stairs
+	* Detect object and follow people
+	
 </details>
 
 ## Project Cost
