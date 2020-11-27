@@ -20,7 +20,10 @@
 ## 3D Printing
 <details>
   <summary>Click to Expand</summary>
-* Pi attachement piece for the Mini
+	
+### Pi attachement piece for the Mini	
+![image](images/sideview2.png)
+
 </details>
 
 ## Planning
