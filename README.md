@@ -5,7 +5,7 @@
 
 ## Hardware & Software
 <details>
-  <summary></summary>
+  <summary>Click to Expand</summary>
 	
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
@@ -19,13 +19,15 @@
 
 ## Planning
 <details>
-  <summary></summary>
+  <summary>Click to Expand</summary>
 * Robotis Mini
-	* buy
+	* buy ✔️
 	* build
 	* test max load (weight)
 	* 3d print RPi mount
-
+* 3D print
+	* Custom Pi Case
+	* Custom piece to attach Pi to the back of the Mini
 * IMU MPU-6050
 	* buy
 	* install on OpenCM9.04
