@@ -3,9 +3,9 @@
 ## Short Description
 --text--
 
-## Hardware & Software
+
 <details>
-  <summary>Click here</summary>
+  <summary>## Hardware & Software</summary>
 	
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
@@ -17,9 +17,9 @@
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
 </details>
 
-## Planning
+
 <details>
-  <summary>Click here</summary>
+  <summary>## Planning</summary>
 * Robotis Mini
 	* buy
 	* build
