@@ -7,10 +7,10 @@
 
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
-	* [Raspbian Stretch](https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/#sbc-setup)  
-	**! I wanted to use Ubuntu Xenial 16.04 but I have not been able to make that OS work correctly on the Pi.
-	Eventually I found an image made by Robotis for their WafflePi that's based on Raspbian stretch and has ROS Kinetic pre-installed!
-	There's also a image for the Pi 4 but it's using ROS Melodic and I don't know how much it differs from Kinetic so I'm playing it safe...**
+	* [Ubuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
+	**! Official Ubuntu Xenial 16.04 didn't boot on the Pi 3B+ (boot Freeze)...
+	Raspbian image with pre-installed ROS from Robotis didn't work (non-installable ROS packages) ...
+	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
 	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
 	
@@ -41,7 +41,7 @@
 | **Item** | **Price** | ✔️ / ❌|
 |----------|-----------|---------|
 |Robotis Mini	|~€500	|❌	|
-|Raspberry Pi	|~€40	|✔️	|
+|Raspberry Pi 4B|~€40	|✔️	|
 |Pi Camera	|~€25	|❌	|
 |IMU (MPU6050)	|~€1-5	|❌	|
 |-		|	|	|
