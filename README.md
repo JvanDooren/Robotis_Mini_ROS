@@ -17,6 +17,12 @@
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
 </details>
 
+## 3D Printing
+<details>
+  <summary>Click to Expand</summary>
+* Pi attachement piece for the Mini
+</details>
+
 ## Planning
 <details>
   <summary>Click to Expand</summary>
@@ -25,9 +31,12 @@
 	* build
 	* test max load (weight)
 	* 3d print RPi mount
+	
 * 3D print
 	* Custom Pi Case
-	* Custom piece to attach Pi to the back of the Mini
+	* Custom piece to attach Pi to the back of the Mini ✔️
+	* Custom piece for camera in head
+	
 * IMU MPU-6050
 	* buy
 	* install on OpenCM9.04
@@ -45,11 +54,11 @@
 
 ## Project Cost
 
-| **Item** | **Price** | ✔️ / ❌|
+| **Item** | **Price** | ✔️ / ❌ |
 |----------|-----------|---------|
-|Robotis Mini	|~€500	|❌	|
+|Robotis Mini	|~€500	|✔️	|
 |Raspberry Pi 4B|~€40	|✔️	|
 |Pi Camera	|~€25	|❌	|
 |IMU (MPU6050)	|~€1-5	|❌	|
 |-		|	|	|
-|**Total**	|~€570	|❌	|
+|**Total**	|~€570	|	|
