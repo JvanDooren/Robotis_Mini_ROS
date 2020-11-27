@@ -9,7 +9,7 @@
 	
 * [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
 **! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
-	* [Ubuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
+	* [LuUbuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
 	**! Official Ubuntu Xenial 16.04 didn't boot on the Pi 3B+ (boot Freeze)...
 	Raspbian image with pre-installed ROS from Robotis didn't work (non-installable ROS packages) ...
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
