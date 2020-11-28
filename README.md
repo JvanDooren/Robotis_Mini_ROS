@@ -37,6 +37,8 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
 	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
+	* Installed VNC server and added a cronjob to be able to access the pi's desktop remotely in the future (vnc has built-in virtual desktop so it works without a hdmi connection)
+	* Overclocked the Pi to 1.75Ghz because why not
 * This project is a fork from the great work of [Roberto Martín Martín](https://github.com/roberto-martinmartin/robotis_mini).
 
 </details>
