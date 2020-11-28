@@ -82,6 +82,7 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	
 * Advanced Programming
 	* implement FABRIK (Inverse Kinematic) in Mini movement
+		* [ikpy](https://github.com/Phylliade/ikpy) could be a premade option
 	* Make Mini dynamicly stable using IMU data
 	* Make Mini walk using Fabrik
 	* Make Mini walk on (small) stairs
