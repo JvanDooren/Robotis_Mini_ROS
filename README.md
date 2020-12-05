@@ -59,7 +59,7 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 * Robotis Mini
 	* buy ✔️
 	* build ✔️
-	* test max load (weight): Looks to be ok, but the center of cravity has obviously changed 
+	* test max load (weight):✔️ Looks to be ok, but the center of cravity has obviously changed 
 		* I can always remove the included batteries to remove some weight if necessary (even though this would change the center of gravity even more).
 		* If I see that the robot works less optimal with the added Raspberry pi, I can always remove it for now and thether the robot to it.
 	* 3d print RPi mount ✔️
@@ -81,6 +81,11 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	* install on Pi
 
 * Basic software Setup
+	* Control dynamixel servos using OpenCM9.04
+		* trying 3 different libraries from Robotis:
+			* Dynamixel2Arduino: really easy and straight-forward but maybe not complex enough
+			* DynamixelWorkbench: more complicated but has built-in XL320.msg for ROS which is a great thing for later
+			* DynamixelSDK: This is some complex stuff, I want to stay away from that if I can hahaha
 	* Implement ROS on OpenCM9.04
 		* publish all info from servos,IMU,raspberry
 		* subcribe to get positions for servos
