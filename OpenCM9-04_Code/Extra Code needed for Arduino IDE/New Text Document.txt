@@ -1,0 +1,5 @@
+The OpenCM9.04 board package for Arduino IDE allready pre-installs ros_lib folder inside itself (package), so uninstall rosserial from library and use ros from OpenCM9.04 package instead
+
+* dynamixel_workbench_msgs/ + ros/ + boost/
+ 	--Win10--> C:\Users\LdL Notebook\AppData\Local\Arduino15\packages\OpenCM904\hardware\OpenCM904\1.4.2\libraries\ros_lib
+	--Linux--> ~/??idk yet??/packages\OpenCM904\hardware\OpenCM904\1.4.2\libraries\ros_lib

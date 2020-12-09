@@ -1,3 +1,5 @@
+#include <ros.h>
+#include <dynamixel_workbench_msgs/XL320.h>
 void setup() {
   // put your setup code here, to run once:
 
