@@ -62,12 +62,13 @@ I've printed several parts for this project:
 * Robotis Mini
 	* buy ✔️
 	* build ✔️
-	* test max load (weight):✔️ Looks to be ok, but the center of cravity has obviously changed 
+	* test max load (weight):✔️ Looks to be ok, but the center of cravity has obviously changed
 		* I can always remove the included batteries to remove some weight if necessary (even though this would change the center of gravity even more).
 		* If I see that the robot works less optimal with the added Raspberry pi, I can always remove it for now and thether the robot to it.
+		* [Video of Mini Doing Squads with his Raspberry Pi backpack](https://youtu.be/nuyvmqLuNoM)
 	* 3d print RPi mount ✔️
 
-[Video of Mini Doing Squads with his Raspberry Pi backpack](https://youtu.be/nuyvmqLuNoM)
+
 
 	
 * 3D print
