@@ -11,6 +11,8 @@ They're relatively cheap (\~€25) but have a lot of cool features (temp,voltage
 After some research it's clear that the Mini is the most popular and open humanoid robot kit on the market (for now...).
 <br><br>
 The plan for this project is to control the Robotis (Darwin) Mini using ROS
+<br><br>
+**This project is a fork from the great work of [Roberto Martín Martín](https://github.com/roberto-martinmartin/robotis_mini)**
 
 ## Detailed Description
 <details>
@@ -25,31 +27,32 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 
 </details>
 
-## Hardware & Software
+## Raspberry Pi Setup
 <details>
   <summary>Click to Expand</summary>
 	
-* [Raspberry Pi 3B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/?resellerType=home) 
-**! Model 3B+ has been chosen because it's the last version of the pi that can run 16.04 !** 
+* [Raspberry Pi 4B](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/?resellerType=home) 
 	* [LuUbuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
-	**! Official Ubuntu Xenial 16.04 didn't boot on the Pi 3B+ (bootloop)...
-	Raspbian image with pre-installed ROS from Robotis didn't work (non-installable ROS packages) ...
+		* Official Ubuntu Xenial 16.04 didn't boot on the Pi 4B (bootloop)...
+		* Raspbian image with pre-installed ROS from Robotis didn't work (non-installable ROS packages) ...
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
 	* [ROS Kinetic (desktop-full)](http://wiki.ros.org/kinetic) 
 	**! ROS Kinetic has been chosen because it's the most used version of ROS !**
 	* Installed VNC server and added a cronjob to be able to access the pi's desktop remotely in the future (vnc has built-in virtual desktop so it works without a hdmi connection)
 	* Overclocked the Pi to 1.75Ghz because why not
-* This project is a fork from the great work of [Roberto Martín Martín](https://github.com/roberto-martinmartin/robotis_mini).
 
 </details>
 
 ## 3D Printing
 <details>
   <summary>Click to Expand</summary>
+I've printed several parts for this project:
 	
-### Pi attachement piece for the Mini	
-![image](images/sideview2.png)
-
+* Raspberry Pi 4B case
+* Raspberry Pi attachment for Robotis Mini
+* Structure to hold the Mini in standing position when off
+	
+**Please check the 3D_Files folder in this repo for more info and photos**	
 </details>
 
 ## Planning
@@ -64,7 +67,7 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 		* If I see that the robot works less optimal with the added Raspberry pi, I can always remove it for now and thether the robot to it.
 	* 3d print RPi mount ✔️
 
-![image](https://media.giphy.com/media/tkqkvHBj147tJ3b6vN/giphy.gif)
+[Video of Mini Doing Squads with his Raspberry Pi backpack](https://youtu.be/nuyvmqLuNoM)
 
 	
 * 3D print
@@ -73,7 +76,7 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	* Custom piece for camera in head
 	
 * IMU MPU-6050
-	* buy
+	* buy ✔️
 	* install on OpenCM9.04
 
 * Raspberry Camera
@@ -83,11 +86,11 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 * Basic software Setup
 	* Control dynamixel servos using OpenCM9.04
 		* trying 3 different libraries from Robotis:
-			* Dynamixel2Arduino: really easy and straight-forward but maybe not complex enough
-			* DynamixelWorkbench: more complicated but has built-in XL320.msg for ROS which is a great thing for later
-			* DynamixelSDK: This is some complex stuff, I want to stay away from that if I can hahaha
+			* ❌ Dynamixel2Arduino: really easy and straight-forward but maybe not complex enough
+			* ✔️ DynamixelWorkbench: more complicated but has built-in XL320.msg for ROS which is a great thing for later 
+			* ❌ DynamixelSDK: This is some complex stuff, I want to stay away from that if I can hahaha
 	* Implement ROS on OpenCM9.04
-		* publish all info from servos,IMU,raspberry
+		* publish all info from servos✔️,IMU,raspberry
 		* subcribe to get positions for servos
 	* implement OpenCV on Pi with camera
 	
