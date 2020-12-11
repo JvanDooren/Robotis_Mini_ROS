@@ -38,7 +38,7 @@ ros::Publisher xl320_16_State("xl320_16_State", &xl320_msg);
 //-----------///
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(57600); //for ROS
   //----ROS----//
   nh.initNode();
   nh.advertise(xl320_1_State);
@@ -60,11 +60,7 @@ void setup() {
   //-----------//
 
   //----START CONNECTION TO SERVO's----
-  //-----------------------------------
-  Serial.println("Waiting 5 seconds for servos to boot");
-  delay(5000);
-  Serial.println("START CONNECTION TO SERVOs");
-  Serial.println("");
+  delay(5000);                                          //Waiting 5 seconds for servos to boot
 
   result = dxl_wb.init(DEVICE_NAME, DEVICE_BAUDRATE);
   if (result == false)
@@ -72,67 +68,36 @@ void setup() {
     Serial.println(logs);
     Serial.println("Failed to init");
   }
-  else
-  {
-    Serial.print("Succeed to init : ");
-    Serial.println(DEVICE_BAUDRATE);
-  }
+
   //-----------------------------------
   //----SCAN CONNECTED SERVO's----
-  Serial.println("");
-  Serial.println("SCAN CONNECTED SERVOs");
-  Serial.println("");
-
   result = dxl_wb.scan(get_id, &scan_cnt, 253);
   if (result == false)
   {
     Serial.println(logs);
     Serial.println("Failed to scan");
   }
-  else
-  {
-    Serial.print("Found ");
-    Serial.print(scan_cnt+1);
-    Serial.println(" Dynamixels");
-
-    for (int cnt = 0; cnt < scan_cnt; cnt++)
-    {
-      Serial.print("id : ");
-      Serial.print(get_id[cnt]);
-      Serial.print(" model name : ");
-      Serial.println(dxl_wb.getModelName(get_id[cnt]));
-    }
-  }
   //------------------------------
-delay(1000);
 }
 
 void loop() {
 
   //----SHOW CONTROL TABLE OF SERVO----
-  //Serial.println("");
-  //Serial.println("SHOW CONTROL TABLE OF SERVO WITH ID 1");
-  //Serial.println("");
   Read_Control_Tables();
-  //Show_Data(16);
 
   //----ROS----//
   Publish_Control_Tables();
   nh.spinOnce();
-  delay(1000);
+  delay(250);
 }
 
 
 void Read_Control_Tables() {
 //----EXECUTE FOLLOWING CODE ON ALL SERVOs-----
 
-  Serial.println("Read_Control_Table function");
-
   for (int i = 0; i < NUMBER_OF_SERVOS; i++) { //NUMBER_OF_SERVOS
     const ControlItem *control_item =  dxl_wb.getControlTable(i+1);     //getting Control Table of XL320 with ID i+1
-
-    //uint8_t the_number_of_control_item = dxl_wb.getTheNumberOfControlItem(i);
-    //Serial.print("number of control items:");Serial.println(the_number_of_control_item);
+    
     uint16_t last_register_addr = control_item[NUMBER_OF_CONTROL_ITEMS-1].address;
     uint16_t last_register_addr_length = control_item[NUMBER_OF_CONTROL_ITEMS-1].data_length;
     uint32_t getAllRegisteredData[last_register_addr+last_register_addr_length];
@@ -150,15 +115,13 @@ void Read_Control_Tables() {
           uint32_t data = 0;
           xl320[i][id] = getAllRegisteredData[control_item[id].address];
         }
-        //Serial.print("read all data from ID ");Serial.println(i+1);
-        //delay(10);
       }
     }
   }
 }
 
 void Publish_Control_Tables(){
-  //fill message for Servo with ID 1
+  
   Set_xl320_msg(1);
   xl320_1_State.publish( &xl320_msg );
 
