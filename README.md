@@ -15,24 +15,20 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 **This project is a fork from the great work of [Roberto Martín Martín](https://github.com/roberto-martinmartin/robotis_mini)**
 
 ## Detailed Description
-<details>
-  <summary>Click to Expand</summary>
-	
+
 - I don't know yet if the code made by Martin will be useful as he used potpy and a direct connection to the servos to control his Mini.
 - I'm planning on using the OpenCM9.04 to send and recieve data from the servos and to ROS topics using ROSSerial.
-- The OpenCM9.04 will be connected to the Raspberry Pi using a usb cable and the Pi will be running all the ROS packages.
+- The OpenCM9.04 will be connected to the Raspberry Pi using a usb cable and the Pi will be running ROS.
 - the MPU6050 will be connected to the OpenCM9.04, as it's just a fancy arduino board, and send important data to a ROS topic using ROSSerial.
 - A camera will be connected to the Pi for OpenCV.
 - The goal of this project is to learn more about humanoid robots and how to program them.
-
-</details>
 
 ## Raspberry Pi Setup
 <details>
   <summary>Click to Expand</summary>
 	
 * [Raspberry Pi 4B](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/?resellerType=home) 
-	* [LuUbuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
+	* [Lubuntu 16.04](https://downloads.ubiquityrobotics.com/pi.html)  
 		* Official Ubuntu Xenial 16.04 didn't boot on the Pi 4B (bootloop)...
 		* Raspbian image with pre-installed ROS from Robotis didn't work (non-installable ROS packages) ...
 	Eventually I found an image made by Ubiquity Robotics which is based on Ubuntu 16.04 and has ROS Kinetic pre-installed + it runs on the Pi 4B!**
@@ -44,8 +40,6 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 </details>
 
 ## 3D Printing
-<details>
-  <summary>Click to Expand</summary>
 I've printed several parts for this project:
 	
 * Raspberry Pi 4B case
@@ -53,7 +47,6 @@ I've printed several parts for this project:
 * Structure to hold the Mini in standing position when off
 	
 **Please check the 3D_Files folder in this repo for more info and photos**	
-</details>
 
 ## Planning
 <details>
