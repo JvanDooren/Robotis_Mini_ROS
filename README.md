@@ -20,7 +20,7 @@ The plan for this project is to control the Robotis (Darwin) Mini using ROS
 	
 - I don't know yet if the code made by Martin will be useful as he used potpy and a direct connection to the servos to control his Mini.
 - I'm planning on using the OpenCM9.04 to send and recieve data from the servos and to ROS topics using ROSSerial.
-- The OpenCM9.04 will be connected to the Raspberry Pi using a usb cable and the Pi will be running all the ROS packages.
+- The OpenCM9.04 will be connected to the Raspberry Pi using a usb cable and the Pi will be running ROS.
 - the MPU6050 will be connected to the OpenCM9.04, as it's just a fancy arduino board, and send important data to a ROS topic using ROSSerial.
 - A camera will be connected to the Pi for OpenCV.
 - The goal of this project is to learn more about humanoid robots and how to program them.
