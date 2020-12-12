@@ -1,5 +1,6 @@
 #include <ros.h>
 #include <dynamixel_workbench_msgs/XL320.h>
+#include <std_msgs/Int16.h>
 #include <DynamixelWorkbench.h>
 
 
@@ -18,6 +19,7 @@ uint8_t scan_cnt = 0;
 
 //----ROS----//
 ros::NodeHandle nh;
+//--Set up Publishers--
 dynamixel_workbench_msgs::XL320 xl320_msg;
 ros::Publisher xl320_1_State("xl320_1_State", &xl320_msg);
 ros::Publisher xl320_2_State("xl320_2_State", &xl320_msg);
@@ -36,11 +38,135 @@ ros::Publisher xl320_14_State("xl320_14_State", &xl320_msg);
 ros::Publisher xl320_15_State("xl320_15_State", &xl320_msg);
 ros::Publisher xl320_16_State("xl320_16_State", &xl320_msg);
 //-----------///
+//--All subscription callbacks--
+void global_Torque_State_CB(const std_msgs::Int16& msg)
+{
+    if (msg.data == 1) // Turn ON torque on all servos
+    {
+        for (int i=1;i<=16;i++)
+        {
+          dxl_wb.torqueOn(i,&logs);
+          delay(100);
+          SetGlobalVelocity(100);
+        }
+    }
+    else
+    {
+        for (int j=1;j<=16;j++)
+        {
+          dxl_wb.torqueOff(j,&logs);
+        }
+    }
+}
+
+void xl320_1_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(1,rad,&logs);
+}
+void xl320_2_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(2,rad,&logs);
+}
+void xl320_3_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(3,rad,&logs);
+}
+void xl320_4_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(4,rad,&logs);
+}
+void xl320_5_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(5,rad,&logs);
+}
+void xl320_6_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(6,rad,&logs);
+}
+void xl320_7_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(7,rad,&logs);
+}
+void xl320_8_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(8,rad,&logs);
+}
+void xl320_9_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(9,rad,&logs);
+}
+void xl320_10_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(10,rad,&logs);
+}
+void xl320_11_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(11,rad,&logs);
+}
+void xl320_12_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(12,rad,&logs);
+}
+void xl320_13_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(13,rad,&logs);
+}
+void xl320_14_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(14,rad,&logs);
+}
+void xl320_15_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(15,rad,&logs);
+}
+void xl320_16_SetAngle_CB(const std_msgs::Int16& msg)
+{
+  float rad = AngleToRadian(msg.data);
+  dxl_wb.goalPosition(16,rad,&logs);
+}
+//-----------///
+//--Set up Subcribers--
+ros::Subscriber<std_msgs::Int16> global_Torque_State("global_Torque_State", &global_Torque_State_CB);
+
+ros::Subscriber<std_msgs::Int16> xl320_1_SetAngle("xl320_1_SetAngle", &xl320_1_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_2_SetAngle("xl320_2_SetAngle", &xl320_2_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_3_SetAngle("xl320_3_SetAngle", &xl320_3_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_4_SetAngle("xl320_4_SetAngle", &xl320_4_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_5_SetAngle("xl320_5_SetAngle", &xl320_5_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_6_SetAngle("xl320_6_SetAngle", &xl320_6_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_7_SetAngle("xl320_7_SetAngle", &xl320_7_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_8_SetAngle("xl320_8_SetAngle", &xl320_8_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_9_SetAngle("xl320_9_SetAngle", &xl320_9_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_10_SetAngle("xl320_10_SetAngle", &xl320_10_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_11_SetAngle("xl320_11_SetAngle", &xl320_11_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_12_SetAngle("xl320_12_SetAngle", &xl320_12_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_13_SetAngle("xl320_13_SetAngle", &xl320_13_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_14_SetAngle("xl320_14_SetAngle", &xl320_14_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_15_SetAngle("xl320_15_SetAngle", &xl320_15_SetAngle_CB);
+ros::Subscriber<std_msgs::Int16> xl320_16_SetAngle("xl320_16_SetAngle", &xl320_16_SetAngle_CB);
+//-----------///
+
 
 void setup() {
   Serial.begin(57600); //for ROS
   //----ROS----//
   nh.initNode();
+  //--Initialise Publishers--
   nh.advertise(xl320_1_State);
   nh.advertise(xl320_2_State);
   nh.advertise(xl320_3_State);
@@ -57,7 +183,27 @@ void setup() {
   nh.advertise(xl320_14_State);
   nh.advertise(xl320_15_State);
   nh.advertise(xl320_16_State);
+  //--Initialise Subscribers--
+  nh.subscribe(global_Torque_State);
+  
+  nh.subscribe(xl320_1_SetAngle);
+  nh.subscribe(xl320_2_SetAngle);
+  nh.subscribe(xl320_3_SetAngle);
+  nh.subscribe(xl320_4_SetAngle);
+  nh.subscribe(xl320_5_SetAngle);
+  nh.subscribe(xl320_6_SetAngle);
+  nh.subscribe(xl320_7_SetAngle);
+  nh.subscribe(xl320_8_SetAngle);
+  nh.subscribe(xl320_9_SetAngle);
+  nh.subscribe(xl320_10_SetAngle);
+  nh.subscribe(xl320_11_SetAngle);
+  nh.subscribe(xl320_12_SetAngle);
+  nh.subscribe(xl320_13_SetAngle);
+  nh.subscribe(xl320_14_SetAngle);
+  nh.subscribe(xl320_15_SetAngle);
+  nh.subscribe(xl320_16_SetAngle);
   //-----------//
+
 
   //----START CONNECTION TO SERVO's----
   delay(5000);                                          //Waiting 5 seconds for servos to boot
@@ -78,10 +224,23 @@ void setup() {
     Serial.println("Failed to scan");
   }
   //------------------------------
+
+  //----SET GLOBAL VELOCITY TO 100 (SLOW)
+  SetGlobalVelocity(100);
+  //------------------------------
 }
 
 void loop() {
-
+  // Testing using Radians (degrees)
+  //float rad90 = AngleToRadian(90);
+  
+  //float radn90 = AngleToRadian(-90);
+  //dxl_wb.goalPosition(1,rad90,&logs);
+  //delay(3000);
+  //dxl_wb.goalPosition(1,radn90,&logs);
+  //delay(3000);
+  
+  
   //----SHOW CONTROL TABLE OF SERVO----
   Read_Control_Tables();
 
@@ -91,6 +250,19 @@ void loop() {
   delay(250);
 }
 
+float AngleToRadian(int angle)
+{
+  float rad =  (float(angle) * float(71)) / float(4068);
+  return rad;
+}
+
+void SetGlobalVelocity(int velocity)
+{
+  for (int i = 1; i <=16;i++)
+  {
+    dxl_wb.jointMode(i,velocity,0,&logs);
+  }
+}
 
 void Read_Control_Tables() {
 //----EXECUTE FOLLOWING CODE ON ALL SERVOs-----
