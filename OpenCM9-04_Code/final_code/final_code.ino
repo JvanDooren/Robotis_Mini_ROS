@@ -1,8 +1,9 @@
 #include <ros.h>
 #include <dynamixel_workbench_msgs/XL320.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/String.h>
 #include <DynamixelWorkbench.h>
-
+#include "Wire.h"
 
 #define DEVICE_NAME "1"               //Dynamixel on Serial1 (OpenCM9.04)
 #define DEVICE_BAUDRATE 1000000       //Baudrate for XL320 communication
@@ -17,10 +18,23 @@ const char *logs = NULL;              //Var for showing logs
 uint8_t get_id[16];
 uint8_t scan_cnt = 0;
 
+//----MPU6050----///
+const int MPU_ADDR = 0x68; // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
+int16_t a_x, a_y, a_z; // variables for accelerometer raw data
+int16_t g_x, g_y, g_z; // variables for gyro raw data
+int16_t temp; // variables for temperature data
+
 //----ROS----//
 ros::NodeHandle nh;
 //--Set up Publishers--
 dynamixel_workbench_msgs::XL320 xl320_msg;
+
+std_msgs::String imu_xyz_msg;
+std_msgs::Int16 imu_temp_msg;
+ros::Publisher imu_gyro("imu_gyro", &imu_xyz_msg);
+ros::Publisher imu_velocity("imu_velocity", &imu_xyz_msg);
+ros::Publisher imu_temp("imu_temp", &imu_temp_msg);
+
 ros::Publisher xl320_1_State("xl320_1_State", &xl320_msg);
 ros::Publisher xl320_2_State("xl320_2_State", &xl320_msg);
 ros::Publisher xl320_3_State("xl320_3_State", &xl320_msg);
@@ -164,9 +178,21 @@ ros::Subscriber<std_msgs::Int16> xl320_16_SetAngle("xl320_16_SetAngle", &xl320_1
 
 void setup() {
   Serial.begin(57600); //for ROS
+  //----MPU6050----//
+  Wire.begin();
+  Wire.beginTransmission(MPU_ADDR); // Begins a transmission to the I2C slave (GY-521 board)
+  Wire.write(0x6B); // PWR_MGMT_1 register
+  Wire.write(0); // set to zero (wakes up the MPU-6050)
+  Wire.endTransmission(true);
+  
   //----ROS----//
   nh.initNode();
-  //--Initialise Publishers--
+  //--Initialise Publishers--  
+  
+  nh.advertise(imu_gyro);
+  nh.advertise(imu_velocity);
+  nh.advertise(imu_temp);
+  
   nh.advertise(xl320_1_State);
   nh.advertise(xl320_2_State);
   nh.advertise(xl320_3_State);
@@ -183,6 +209,7 @@ void setup() {
   nh.advertise(xl320_14_State);
   nh.advertise(xl320_15_State);
   nh.advertise(xl320_16_State);
+  
   //--Initialise Subscribers--
   nh.subscribe(global_Torque_State);
   
@@ -206,7 +233,7 @@ void setup() {
 
 
   //----START CONNECTION TO SERVO's----
-  delay(5000);                                          //Waiting 5 seconds for servos to boot
+  delay(2500);                                          //Waiting 2.5 seconds for servos to boot
 
   result = dxl_wb.init(DEVICE_NAME, DEVICE_BAUDRATE);
   if (result == false)
@@ -231,15 +258,8 @@ void setup() {
 }
 
 void loop() {
-  // Testing using Radians (degrees)
-  //float rad90 = AngleToRadian(90);
-  
-  //float radn90 = AngleToRadian(-90);
-  //dxl_wb.goalPosition(1,rad90,&logs);
-  //delay(3000);
-  //dxl_wb.goalPosition(1,radn90,&logs);
-  //delay(3000);
-  
+  //----MPU6050----//
+  Read_Publish_imu();  
   
   //----SHOW CONTROL TABLE OF SERVO----
   Read_Control_Tables();
@@ -250,10 +270,39 @@ void loop() {
   delay(250);
 }
 
+void Read_Publish_imu()
+{
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
+  Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
+  Wire.requestFrom(MPU_ADDR, 7*2, true); // request a total of 7*2=14 registers
+  
+  g_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
+  g_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x3D (ACCEL_YOUT_H) and 0x3E (ACCEL_YOUT_L)
+  g_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x3F (ACCEL_ZOUT_H) and 0x40 (ACCEL_ZOUT_L)
+  temp = Wire.read()<<8 | Wire.read(); // reading registers: 0x41 (TEMP_OUT_H) and 0x42 (TEMP_OUT_L)
+  a_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x43 (GYRO_XOUT_H) and 0x44 (GYRO_XOUT_L)
+  a_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x45 (GYRO_YOUT_H) and 0x46 (GYRO_YOUT_L)
+  a_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
+  
+  imu_gyro.publish( &imu_xyz_msg );
+  
+  imu_velocity.publish( &imu_xyz_msg );
+
+  imu_temp_msg.data = temp/340.00+36.53;
+  imu_temp.publish(&imu_temp_msg);
+}
+
 float AngleToRadian(int angle)
 {
   float rad =  (float(angle) * float(71)) / float(4068);
   return rad;
+}
+
+int RadianToAngle(float radian)
+{
+  int angle =  (radian * 4068) / int(71);
+  return angle;
 }
 
 void SetGlobalVelocity(int velocity)
@@ -370,7 +419,15 @@ void Set_xl320_msg(int id){
   xl320_msg.Goal_Position = xl320[id][19];
   xl320_msg.Moving_Speed = xl320[id][20];
   xl320_msg.Torque_Limit = xl320[id][21];
+
+  // Convert radian to angle
+  
+  //xl320_msg.Present_Position = RadianToAngle(xl320[id][22]);
   xl320_msg.Present_Position = xl320[id][22];
+  //float radIn = 0;
+  //dxl_wb.getRadian(id, &radIn, &logs);
+  //xl320_msg.Present_Position = RadianToAngle(radIn);
+  
   xl320_msg.Present_Speed = xl320[id][23];
   xl320_msg.Present_Load = xl320[id][24];
   xl320_msg.Present_Voltage = xl320[id][25];
