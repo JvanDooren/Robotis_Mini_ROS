@@ -4,7 +4,8 @@ import time
 from std_msgs.msg import Int16
 from dynamixel_workbench_msgs.msg import XL320
 
-pub_global_torque = rospy.Publisher('global_Torque_State',Int16,queue_size=10)
+pub_global_torque = rospy.Publisher(
+    'global_Torque_State', Int16, queue_size=10)
 
 pub_angle_1 = rospy.Publisher('xl320_1_SetAngle', Int16, queue_size=10)
 pub_angle_2 = rospy.Publisher('xl320_2_SetAngle', Int16, queue_size=10)
@@ -27,11 +28,8 @@ rospy.init_node('base', anonymous=True)
 rate = rospy.Rate(0.3)  # 10hz
 
 
-
-
-
-#while not rospy.is_shutdown():
-#Set all XL320's to their 0 position
+# while not rospy.is_shutdown():
+# Set all XL320's to their 0 position
 rospy.loginfo("Enabling Torque")
 pub_global_torque.publish(1)
 time.sleep(5)
