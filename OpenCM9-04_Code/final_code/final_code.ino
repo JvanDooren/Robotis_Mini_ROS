@@ -1,5 +1,6 @@
 #include <ros.h>
 #include <dynamixel_workbench_msgs/XL320.h>
+#include <robotis_mini_ros/imu.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/String.h>
 #include <DynamixelWorkbench.h>
@@ -20,21 +21,16 @@ uint8_t scan_cnt = 0;
 
 //----MPU6050----///
 const int MPU_ADDR = 0x68; // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
-int16_t a_x, a_y, a_z; // variables for accelerometer raw data
-int16_t g_x, g_y, g_z; // variables for gyro raw data
+int16_t g_x,g_y,g_z,a_x,a_y,a_z,a_w;
 int16_t temp; // variables for temperature data
 
 //----ROS----//
 ros::NodeHandle nh;
 //--Set up Publishers--
+robotis_mini_ros::imu imu_msg;
+ros::Publisher imu_State("imu_State", &imu_msg);
+
 dynamixel_workbench_msgs::XL320 xl320_msg;
-
-std_msgs::String imu_xyz_msg;
-std_msgs::Int16 imu_temp_msg;
-ros::Publisher imu_gyro("imu_gyro", &imu_xyz_msg);
-ros::Publisher imu_velocity("imu_velocity", &imu_xyz_msg);
-ros::Publisher imu_temp("imu_temp", &imu_temp_msg);
-
 ros::Publisher xl320_1_State("xl320_1_State", &xl320_msg);
 ros::Publisher xl320_2_State("xl320_2_State", &xl320_msg);
 ros::Publisher xl320_3_State("xl320_3_State", &xl320_msg);
@@ -189,9 +185,7 @@ void setup() {
   nh.initNode();
   //--Initialise Publishers--  
   
-  nh.advertise(imu_gyro);
-  nh.advertise(imu_velocity);
-  nh.advertise(imu_temp);
+  nh.advertise(imu_State);
   
   nh.advertise(xl320_1_State);
   nh.advertise(xl320_2_State);
@@ -260,14 +254,14 @@ void setup() {
 void loop() {
   //----MPU6050----//
   Read_Publish_imu();  
-  
+  delay(100);
   //----SHOW CONTROL TABLE OF SERVO----
   Read_Control_Tables();
 
   //----ROS----//
   Publish_Control_Tables();
   nh.spinOnce();
-  delay(250);
+  delay(100);
 }
 
 void Read_Publish_imu()
@@ -281,16 +275,22 @@ void Read_Publish_imu()
   g_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x3D (ACCEL_YOUT_H) and 0x3E (ACCEL_YOUT_L)
   g_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x3F (ACCEL_ZOUT_H) and 0x40 (ACCEL_ZOUT_L)
   temp = Wire.read()<<8 | Wire.read(); // reading registers: 0x41 (TEMP_OUT_H) and 0x42 (TEMP_OUT_L)
-  a_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x43 (GYRO_XOUT_H) and 0x44 (GYRO_XOUT_L)
-  a_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x45 (GYRO_YOUT_H) and 0x46 (GYRO_YOUT_L)
+  a_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x43 (GYRO_XOUT_H) and 0x44 (GYRO_XOUT_L)
+  a_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x45 (GYRO_YOUT_H) and 0x46 (GYRO_YOUT_L)
   a_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
-  
-  imu_gyro.publish( &imu_xyz_msg );
-  
-  imu_velocity.publish( &imu_xyz_msg );
+  a_w = 0; //Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
 
-  imu_temp_msg.data = temp/340.00+36.53;
-  imu_temp.publish(&imu_temp_msg);
+  imu_msg.gyro_x = map(g_x,-16000,17000,-90,90);
+  imu_msg.gyro_y = map(g_y,-17000,16000,-90,90);
+  imu_msg.gyro_z = map(g_z,-18000,15000,-90,90);
+  temp = Wire.read()<<8 | Wire.read(); // reading registers: 0x41 (TEMP_OUT_H) and 0x42 (TEMP_OUT_L)
+  imu_msg.accel_x = a_x;
+  imu_msg.accel_y = a_y;
+  imu_msg.accel_z = a_z;
+  imu_msg.accel_w = 0; //Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
+
+  imu_msg.temp = temp/340.00+36.53;
+  imu_State.publish(&imu_msg);
 }
 
 float AngleToRadian(int angle)
@@ -437,51 +437,3 @@ void Set_xl320_msg(int id){
   xl320_msg.Hardware_Error_Status = xl320[id][29];
   xl320_msg.Punch = xl320[id][30];
 }
-
-/*
-void Show_Data(int id)
-{
-  id = id-1;                        //Array starts from 0 but id of first servo is 1
-  Serial.println("Showing Data");
-  //----EEPROM AREA----
-  Serial.println("");
-  Serial.println("EEPROM AREA");
-  Serial.println("");
-  Serial.print("Model_Number ");Serial.println(xl320[id][0]);
-  Serial.print("Firmware_Version ");Serial.println(xl320[id][1]);
-  Serial.print("ID ");Serial.println(xl320[id][2]);
-  Serial.print("Baud_Rate ");Serial.println(xl320[id][3]);
-  Serial.print("Return_Delay_Time");Serial.println(xl320[id][4]);
-  Serial.print("CW_Angle_Limit");Serial.println(xl320[id][5]);
-  Serial.print("CCW_Angle_Limit");Serial.println(xl320[id][6]);
-  Serial.print("Control_Mode");Serial.println(xl320[id][7]);
-  Serial.print("Temperature_Limit");Serial.println(xl320[id][8]);
-  Serial.print("Min_Voltage_Limit");Serial.println(xl320[id][9]);
-  Serial.print("Max_Voltage_Limit");Serial.println(xl320[id][10]);
-  Serial.print("Max_Torque");Serial.println(xl320[id][11]);
-  Serial.print("Status_Return_Level");Serial.println(xl320[id][12]);
-  Serial.print("Shutdown");Serial.println(xl320[id][13]);
-  //----RAM AREA----
-  Serial.println("");
-  Serial.println("RAM AREA");
-  Serial.println("");
-  Serial.print("Torque_Enable");Serial.println(xl320[id][14]);
-  Serial.print("LED");Serial.println(xl320[id][15]);
-  Serial.print("D_gain");Serial.println(xl320[id][16]);
-  Serial.print("I_gain");Serial.println(xl320[id][17]);
-  Serial.print("P_gain");Serial.println(xl320[id][18]);
-  Serial.print("Goal_Position");Serial.println(xl320[id][19]);
-  Serial.print("Moving_Speed");Serial.println(xl320[id][20]);
-  Serial.print("Torque_Limit");Serial.println(xl320[id][21]);
-  Serial.print("Present_Position");Serial.println(xl320[id][22]);
-  Serial.print("Present_Speed");Serial.println(xl320[id][23]);
-  Serial.print("Present_Load");Serial.println(xl320[id][24]);
-  Serial.print("Present_Voltage");Serial.println(xl320[id][25]);
-  Serial.print("Present_Temperature");Serial.println(xl320[id][26]);
-  Serial.print("Registered");Serial.println(xl320[id][27]);
-  Serial.print("Moving");Serial.println(xl320[id][28]);
-  Serial.print("Hardware_Error_Status");Serial.println(xl320[id][29]);
-  Serial.print("Punch");Serial.println(xl320[id][30]);
-  Serial.println("##################################################");
-}
-*/

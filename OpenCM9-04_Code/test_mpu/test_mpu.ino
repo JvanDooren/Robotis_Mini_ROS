@@ -51,13 +51,13 @@ void loop() {
   String temp = String(gyro_x) + "," + String(gyro_y);
   Serial.println(temp);
   Serial.println(" ");
-  //Serial.print("aX = "); Serial.print(accelerometer_x);
-  //Serial.print(" | aY = "); Serial.print(accelerometer_y);
-  //Serial.print(" | aZ = "); Serial.print(accelerometer_z);
+  Serial.print("aX = "); Serial.print(accelerometer_x);
+  Serial.print(" | aY = "); Serial.print(accelerometer_y);
+  Serial.print(" | aZ = "); Serial.print(accelerometer_z);
   // the following equation was taken from the documentation [MPU-6000/MPU-6050 Register Map and Description, p.30]
-  Serial.print(" | tmp = "); Serial.print(temperature/340.00+36.53);
-  Serial.print(" | gX = "); Serial.print(gyro_x);
-  Serial.print(" | gY = "); Serial.print(gyro_y);
+  //Serial.print(" | tmp = "); Serial.print(temperature/340.00+36.53);
+  //Serial.print(" | gX = "); Serial.print(gyro_x);
+  //Serial.print(" | gY = "); Serial.print(gyro_y);
   //Serial.print(" | gZ = "); Serial.print(gyro_z);
   Serial.println();
   
