@@ -49,6 +49,8 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    imu.msg
+   xl320_info.msg
+   xl320_state.msg
  )
 
 ## Generate services in the 'srv' folder

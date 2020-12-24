@@ -58,8 +58,6 @@ void global_Torque_State_CB(const std_msgs::Int16& msg)
         for (int i=1;i<=16;i++)
         {
           dxl_wb.torqueOn(i,&logs);
-          delay(100);
-          SetGlobalVelocity(100);
         }
     }
     else
@@ -69,6 +67,14 @@ void global_Torque_State_CB(const std_msgs::Int16& msg)
           dxl_wb.torqueOff(j,&logs);
         }
     }
+}
+
+void global_Velocity_CB(const std_msgs::Int16& msg)
+{
+  for (int i = 1; i <=16;i++)
+  {
+    dxl_wb.jointMode(i,int(msg.data),0,&logs);
+  }
 }
 
 void xl320_1_SetAngle_CB(const std_msgs::Int16& msg)
@@ -154,6 +160,7 @@ void xl320_16_SetAngle_CB(const std_msgs::Int16& msg)
 //-----------///
 //--Set up Subcribers--
 ros::Subscriber<std_msgs::Int16> global_Torque_State("global_Torque_State", &global_Torque_State_CB);
+ros::Subscriber<std_msgs::Int16> global_Velocity("global_Velocity", &global_Velocity_CB);
 
 ros::Subscriber<std_msgs::Int16> xl320_1_SetAngle("xl320_1_SetAngle", &xl320_1_SetAngle_CB);
 ros::Subscriber<std_msgs::Int16> xl320_2_SetAngle("xl320_2_SetAngle", &xl320_2_SetAngle_CB);
@@ -208,6 +215,7 @@ void setup() {
   
   //--Initialise Subscribers--
   nh.subscribe(global_Torque_State);
+  nh.subscribe(global_Velocity);
   
   nh.subscribe(xl320_1_SetAngle);
   nh.subscribe(xl320_2_SetAngle);
@@ -246,28 +254,19 @@ void setup() {
     Serial.println(logs);
     Serial.println("Failed to scan");
   }
-  //------------------------------
-
-  //----SET GLOBAL VELOCITY TO 100 (SLOW)
-  SetGlobalVelocity(100);
-  //------------------------------
-  //---code for transition to new messages
-  dxl_wb.torqueOff(3,&logs);
+  //-----------------------------------
 }
 
 void loop() {
-  //----MPU6050----//
-  Read_Publish_imu();  
-  delay(100);
-  //----SHOW CONTROL TABLE OF SERVO----
   Read_Control_Tables();
   //----ROS----//
   Publish_Control_Tables();
-  delay(100);
+  nh.spinOnce();
+  delay(1);
   //----MPU6050----//
   Read_Publish_imu();
   nh.spinOnce();
-  delay(100);
+  delay(1);
 
 //----DEBUG----
 //  Serial.println("Setting xl320_msg...");
@@ -304,22 +303,27 @@ void Read_Publish_imu()
   g_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
   g_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x3D (ACCEL_YOUT_H) and 0x3E (ACCEL_YOUT_L)
   g_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x3F (ACCEL_ZOUT_H) and 0x40 (ACCEL_ZOUT_L)
+  
   temp = Wire.read()<<8 | Wire.read(); // reading registers: 0x41 (TEMP_OUT_H) and 0x42 (TEMP_OUT_L)
+  
   a_x = Wire.read()<<8 | Wire.read(); // reading registers: 0x43 (GYRO_XOUT_H) and 0x44 (GYRO_XOUT_L)
   a_y = Wire.read()<<8 | Wire.read(); // reading registers: 0x45 (GYRO_YOUT_H) and 0x46 (GYRO_YOUT_L)
   a_z = Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
   a_w = 0; //Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
 
-  imu_msg.gyro_x = map(g_x,-16000,17000,-90,90);
-  imu_msg.gyro_y = map(g_y,-17000,16000,-90,90);
-  imu_msg.gyro_z = map(g_z,-18000,15000,-90,90);
+  imu_msg.gyro_x = map(g_x,-16000,17000,-9000,9000)/100.00;
+  imu_msg.gyro_y = map(g_y,-17000,16000,-9000,9000)/100.00;
+  imu_msg.gyro_z = map(g_z,-18000,15000,-9000,9000)/100.00;
+  
   temp = Wire.read()<<8 | Wire.read(); // reading registers: 0x41 (TEMP_OUT_H) and 0x42 (TEMP_OUT_L)
+  imu_msg.temp = temp/340.00+36.53;
+  
   imu_msg.accel_x = a_x;
   imu_msg.accel_y = a_y;
   imu_msg.accel_z = a_z;
   imu_msg.accel_w = 0; //Wire.read()<<8 | Wire.read(); // reading registers: 0x47 (GYRO_ZOUT_H) and 0x48 (GYRO_ZOUT_L)
 
-  imu_msg.temp = temp/340.00+36.53;
+  
   imu_State.publish(&imu_msg);
 }
 
@@ -333,14 +337,6 @@ float RadianToAngle(float radian)
 {
   float angle =  (radian * 4068.0) / 71.0;
   return angle;
-}
-
-void SetGlobalVelocity(int velocity)
-{
-  for (int i = 1; i <=16;i++)
-  {
-    dxl_wb.jointMode(i,velocity,0,&logs);
-  }
 }
 
 void Read_Control_Tables() {
@@ -374,7 +370,7 @@ void Read_Control_Tables() {
         xl320[i][6] = getAllRegisteredData[control_item[26].address];  //ITEM 26
         xl320[i][7] = getAllRegisteredData[control_item[15].address];  //ITEM 15
         xl320[i][8] = getAllRegisteredData[control_item[29].address];  //ITEM 29
-        delay(2); // make sure it doesn't read to fast from servo register and give txrx error
+        delayMicroseconds(100); // make sure it doesn't read to fast from servo register and give txrx error
       }
     }
   }
@@ -429,7 +425,6 @@ void Publish_Control_Tables(){
 
   Set_xl320_msg(16);
   xl320_16_State.publish( &xl320_msg );
-
 }
 
 void Set_xl320_msg(int id){
