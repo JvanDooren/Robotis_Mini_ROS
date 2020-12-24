@@ -1,8 +1,8 @@
 #include <ros.h>
-#include <dynamixel_workbench_msgs/XL320.h>
+#include <robotis_mini_ros/xl320_info.h>
+#include <robotis_mini_ros/xl320_state.h>
 #include <robotis_mini_ros/imu.h>
 #include <std_msgs/Int16.h>
-#include <std_msgs/String.h>
 #include <DynamixelWorkbench.h>
 #include "Wire.h"
 
@@ -11,13 +11,15 @@
 
 #define NUMBER_OF_SERVOS 16           //Number of Servos
 #define NUMBER_OF_CONTROL_ITEMS 31    //Number of Control Items in XL320 register
-uint16_t xl320[NUMBER_OF_SERVOS][NUMBER_OF_CONTROL_ITEMS];  //Array Containing info of all XL320's
+#define NUMBER_OF_USED_CONTROL_ITEMS 9
+float xl320[NUMBER_OF_SERVOS][NUMBER_OF_USED_CONTROL_ITEMS];  //Array Containing info of all XL320's
 
 DynamixelWorkbench dxl_wb;
 bool result = false;                  //Var for showing result of actions
 const char *logs = NULL;              //Var for showing logs
 uint8_t get_id[16];
 uint8_t scan_cnt = 0;
+float presentPosition=0.0;
 
 //----MPU6050----///
 const int MPU_ADDR = 0x68; // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
@@ -30,7 +32,7 @@ ros::NodeHandle nh;
 robotis_mini_ros::imu imu_msg;
 ros::Publisher imu_State("imu_State", &imu_msg);
 
-dynamixel_workbench_msgs::XL320 xl320_msg;
+robotis_mini_ros::xl320_state xl320_msg;
 ros::Publisher xl320_1_State("xl320_1_State", &xl320_msg);
 ros::Publisher xl320_2_State("xl320_2_State", &xl320_msg);
 ros::Publisher xl320_3_State("xl320_3_State", &xl320_msg);
@@ -249,6 +251,8 @@ void setup() {
   //----SET GLOBAL VELOCITY TO 100 (SLOW)
   SetGlobalVelocity(100);
   //------------------------------
+  //---code for transition to new messages
+  dxl_wb.torqueOff(3,&logs);
 }
 
 void loop() {
@@ -257,11 +261,37 @@ void loop() {
   delay(100);
   //----SHOW CONTROL TABLE OF SERVO----
   Read_Control_Tables();
-
   //----ROS----//
   Publish_Control_Tables();
+  delay(100);
+  //----MPU6050----//
+  Read_Publish_imu();
   nh.spinOnce();
   delay(100);
+
+//----DEBUG----
+//  Serial.println("Setting xl320_msg...");
+//  Set_xl320_msg(3);
+//  Serial.print("id: "); Serial.println(xl320_msg.ID);
+//  Serial.print("torque enable: "); Serial.println(xl320_msg.Torque_Enable);
+//  Serial.print("Present_Position: "); Serial.println(xl320_msg.Present_Position);
+//  Serial.print("Present_Speed: "); Serial.println(xl320_msg.Present_Speed);
+//  Serial.print("Present_Load: "); Serial.println(xl320_msg.Present_Load);
+//  Serial.print("Present_Voltage: "); Serial.println(xl320_msg.Present_Voltage);
+//  Serial.print("Present_Temperature: "); Serial.println(xl320_msg.Present_Temperature);
+//  Serial.print("LED: "); Serial.println(xl320_msg.LED);
+//  Serial.print("Hardware_Error_Status: "); Serial.println(xl320_msg.Hardware_Error_Status);
+  
+//  Serial.print("id: "); Serial.println(xl320[15][0]);
+//  Serial.print("torque enable: "); Serial.println(xl320[15][1]);
+//  Serial.print("Present_Position: "); Serial.println(xl320[15][2]);
+//  Serial.print("Present_Speed: "); Serial.println(xl320[15][3]);
+//  Serial.print("Present_Load: "); Serial.println(xl320[15][4]);
+//  Serial.print("Present_Voltage: "); Serial.println(xl320[15][5]);
+//  Serial.print("Present_Temperature: "); Serial.println(xl320[15][6]);
+//  Serial.print("LED: "); Serial.println(xl320[15][7]);
+//  Serial.print("Hardware_Error_Status: "); Serial.println(xl320[15][8]);
+//  Serial.println("---");
 }
 
 void Read_Publish_imu()
@@ -293,15 +323,15 @@ void Read_Publish_imu()
   imu_State.publish(&imu_msg);
 }
 
-float AngleToRadian(int angle)
+float AngleToRadian(float angle)
 {
-  float rad =  (float(angle) * float(71)) / float(4068);
+  float rad =  (angle * 71.0) / 4068.0;
   return rad;
 }
 
-int RadianToAngle(float radian)
+float RadianToAngle(float radian)
 {
-  int angle =  (radian * 4068) / int(71);
+  float angle =  (radian * 4068.0) / 71.0;
   return angle;
 }
 
@@ -326,16 +356,25 @@ void Read_Control_Tables() {
     if (control_item != NULL){
       result = dxl_wb.readRegister(i+1, (uint16_t)0, last_register_addr+last_register_addr_length, getAllRegisteredData, &logs);
       if (result == false){
-        Serial.print(i+1);Serial.print("=ID || ");Serial.println(logs);
+        Serial.print(i+1);Serial.print("=ID |----------------------------------| ");Serial.println(logs);
         return;
       }
       else
       {
-        //----GET DATA FROM ALL CONTROL ITEMS----
-        for (int id = 0; id < NUMBER_OF_CONTROL_ITEMS; id++){
-          uint32_t data = 0;
-          xl320[i][id] = getAllRegisteredData[control_item[id].address];
-        }
+        //----GET DATA FROM SPECIFIC CONTROL ITEMS----
+        xl320[i][0] = getAllRegisteredData[control_item[2].address];   //ITEM 2
+        xl320[i][1] = getAllRegisteredData[control_item[14].address];  //ITEM 14
+
+        result = dxl_wb.getRadian(i+1,&presentPosition,&logs);         //ITEM 22
+        xl320[i][2] = RadianToAngle(presentPosition);
+
+        xl320[i][3] = getAllRegisteredData[control_item[23].address];  //ITEM 23
+        xl320[i][4] = getAllRegisteredData[control_item[24].address];  //ITEM 24
+        xl320[i][5] = getAllRegisteredData[control_item[25].address];  //ITEM 25
+        xl320[i][6] = getAllRegisteredData[control_item[26].address];  //ITEM 26
+        xl320[i][7] = getAllRegisteredData[control_item[15].address];  //ITEM 15
+        xl320[i][8] = getAllRegisteredData[control_item[29].address];  //ITEM 29
+        delay(2); // make sure it doesn't read to fast from servo register and give txrx error
       }
     }
   }
@@ -395,45 +434,13 @@ void Publish_Control_Tables(){
 
 void Set_xl320_msg(int id){
   id = id-1; // servo ID's are +1 compared to xl320 Array
-
-  xl320_msg.Model_Number = xl320[id][0];
-  xl320_msg.Firmware_Version = xl320[id][1];
-  xl320_msg.ID = xl320[id][2];
-  xl320_msg.Baud_Rate = xl320[id][3];
-  xl320_msg.Return_Delay_Time = xl320[id][4];
-  xl320_msg.CW_Angle_Limit = xl320[id][5];
-  xl320_msg.CCW_Angle_Limit = xl320[id][6];
-  xl320_msg.Control_Mode = xl320[id][7];
-  xl320_msg.Temperature_Limit = xl320[id][8];
-  xl320_msg.Min_Voltage_Limit = xl320[id][9];
-  xl320_msg.Max_Voltage_Limit = xl320[id][10];
-  xl320_msg.Max_Torque = xl320[id][11];
-  xl320_msg.Status_Return_Level = xl320[id][12];
-  xl320_msg.Shutdown = xl320[id][13];
-
-  xl320_msg.Torque_Enable = xl320[id][14];
-  xl320_msg.LED = xl320[id][15];
-  xl320_msg.D_gain = xl320[id][16];
-  xl320_msg.I_gain = xl320[id][17];
-  xl320_msg.P_gain = xl320[id][18];
-  xl320_msg.Goal_Position = xl320[id][19];
-  xl320_msg.Moving_Speed = xl320[id][20];
-  xl320_msg.Torque_Limit = xl320[id][21];
-
-  // Convert radian to angle
-  
-  //xl320_msg.Present_Position = RadianToAngle(xl320[id][22]);
-  xl320_msg.Present_Position = xl320[id][22];
-  //float radIn = 0;
-  //dxl_wb.getRadian(id, &radIn, &logs);
-  //xl320_msg.Present_Position = RadianToAngle(radIn);
-  
-  xl320_msg.Present_Speed = xl320[id][23];
-  xl320_msg.Present_Load = xl320[id][24];
-  xl320_msg.Present_Voltage = xl320[id][25];
-  xl320_msg.Present_Temperature = xl320[id][26];
-  xl320_msg.Registered = xl320[id][27];
-  xl320_msg.Moving = xl320[id][28];
-  xl320_msg.Hardware_Error_Status = xl320[id][29];
-  xl320_msg.Punch = xl320[id][30];
+  xl320_msg.ID = uint8_t(xl320[id][0]);
+  xl320_msg.Torque_Enable = uint8_t(xl320[id][1]);
+  xl320_msg.Present_Position = xl320[id][2];
+  xl320_msg.Present_Speed = uint16_t(xl320[id][3]);
+  xl320_msg.Present_Load = uint16_t(xl320[id][4]);
+  xl320_msg.Present_Voltage = uint8_t(xl320[id][5]);
+  xl320_msg.Present_Temperature = uint8_t(xl320[id][6]);
+  xl320_msg.LED = uint8_t(xl320[id][7]);
+  xl320_msg.Hardware_Error_Status = uint8_t(xl320[id][8]);
 }
