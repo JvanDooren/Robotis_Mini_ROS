@@ -82,7 +82,7 @@ I've printed several parts for this project:
 		* trying 3 different libraries from Robotis:
 			* ✔️ DynamixelWorkbench: more complicated but has built-in XL320.msg for ROS which is a great thing for later
 	* Implement ROS on OpenCM9.04
-		* publish all info from servos✔️,IMU,raspberry
+		* publish all info from servos✔️,IMU✔️,raspberry
 		* subcribe to get positions for servos
 	* implement OpenCV on Pi with camera
 	
