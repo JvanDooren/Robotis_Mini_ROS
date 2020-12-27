@@ -48,7 +48,7 @@ I've printed several parts for this project:
 	
 **Please check the 3D_Files folder in this repo for more info and photos**	
 
-## Planning
+## Updates
 <details>
   <summary>Click to Expand</summary>
 	
@@ -74,7 +74,7 @@ I've printed several parts for this project:
 	* install on OpenCM9.04
 
 * Raspberry Camera
-	* buy
+	* buy ✔️ 
 	* install on Pi
 
 * Basic software Setup
