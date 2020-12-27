@@ -48,7 +48,7 @@ I've printed several parts for this project:
 	
 **Please check the 3D_Files folder in this repo for more info and photos**	
 
-## Updates
+## Planning
 <details>
   <summary>Click to Expand</summary>
 	
@@ -96,13 +96,26 @@ I've printed several parts for this project:
 	
 </details>
 
+## Changelog
+ * November 2020: 
+ First hands-on with the Mini and basic implemention of ROS where all servos publish their data on topics
+
+ * 7 Dec 2020:
+ I can control and monitor both servos and the imu via ROS. Haven't made the mini move yet. 
+ * 27 Dec 2020: 
+ Big update:
+  1) the IMU data is getting published too slowly, this can be seen when executing the IMU test script that sends specific positions to the servos when reading x and y gyro changes. This is probably because the OpenCM9.04 is pushed at its limit due to all the messages published to the servo topics. I tried to shrink the message size by creating a custom message that only contains interesting data (firmware version, baudrate etc are data I don't need every 200ms...) And by publishing those messages less often but I still have some Lagg... --> a solution could be to only publish necessary servo data when needed (using a subscription based system on the Opencm)
+
+  2) I made a first version of a 'walking' script (the code is purely hardcoded servo angles). The main problem I found was that the xl320 are definitely low-end servos: they aren't super powerful and have a lot of backlash. It is not possible to make the robot walk like most high-end robots slowly swinging from left to right with the raspberry pi on its back. The servos just aren't powerful enough for that. --> a solution could be to make him walk more like when he did out of the box: quick and dirty. This will probably work with the Pi on its back un thus I could continue with my project (adding the Pi Camera and doing some ml/ai stuff)
+
+
 ## Project Cost
 
 | **Item** | **Price** | ✔️ / ❌ |
 |----------|-----------|---------|
 |Robotis Mini	|~€500	|✔️	|
 |Raspberry Pi 4B|~€40	|✔️	|
-|Pi Camera	|~€25	|❌	|
+|Pi Camera	|~€25	|✔️ |
 |IMU (MPU6050)	|~€1-5	|✔️	|
 |-		|	|	|
 |**Total**	|~€570	|	|
