@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>robotis_mini_ros</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The robotis_mini_ros package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
@@ -9,55 +9,39 @@
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="pi@todo.todo">pi</maintainer>
 
-
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
   <license>TODO</license>
 
+  <!-- change the buildtool from catkin to ament_cmake -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <!-- Url tags are optional, but multiple are allowed, one per tag -->
-  <!-- Optional attribute type can be: website, bugtracker, or repository -->
-  <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/robotis_mini_ros</url> -->
+  <!-- use rosidl_default_generators instead of message_generation -->
+  <!-- this time, it's a buildtool instead of a dependency -->
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+  <!-- <build_depend>message_generation</build_depend> -->
 
+  <!-- use builtin_interfaces instead of std_msgs -->
+  <build_depend>builtin_interfaces</build_depend>
+  <!--  <build_depend>std_msgs</build_depend> -->
 
-  <!-- Author tags are optional, multiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintainers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <!-- ignore unneeded deps -->
+  <!-- <exec_depend>rospy</exec_depend> -->
+  <!-- <exec_depend>roscpp</exec_depend> -->
+  
+  <exec_depend>builtin_interfaces</exec_depend>
+  <!-- <exec_depend>std_msgs</exec_depend>-->
 
+  <!-- use rosidl_default_runtime instead of message_runtime -->
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <!-- <exec_depend>message_runtime</exec_depend> -->
 
-  <!-- The *depend tags are used to specify dependencies -->
-  <!-- Dependencies can be catkin packages or system dependencies -->
-  <!-- Examples: -->
-  <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
-  <!--   <depend>roscpp</depend> -->
-  <!--   Note that this is equivalent to the following: -->
-  <!--   <build_depend>roscpp</build_depend> -->
-  <!--   <exec_depend>roscpp</exec_depend> -->
-  <!-- Use build_depend for packages you need at compile time: -->
-  <!--   <build_depend>message_generation</build_depend> -->
-  <!-- Use build_export_depend for packages you need in order to build against this package: -->
-  <!--   <build_export_depend>message_generation</build_export_depend> -->
-  <!-- Use buildtool_depend for build tool packages: -->
-  <!--   <buildtool_depend>catkin</buildtool_depend> -->
-  <!-- Use exec_depend for packages you need at runtime: -->
-  <!--   <exec_depend>message_runtime</exec_depend> -->
-  <!-- Use test_depend for packages you need only for testing: -->
-  <!--   <test_depend>gtest</test_depend> -->
-  <!-- Use doc_depend for packages you need only for building documentation: -->
-  <!--   <doc_depend>doxygen</doc_depend> -->
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rospy</build_depend>
-  <build_export_depend>rospy</build_export_depend>
-  <exec_depend>rospy</exec_depend>
-  <!--FOR MESSAGE GENERATION-->
-  <build_depend>message_generation</build_depend>
-  <exec_depend>message_runtime</exec_depend>
+  <!-- add to the rosidl_interface_packages group-->
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
