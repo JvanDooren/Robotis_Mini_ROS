@@ -40,7 +40,7 @@ def JointStateWrite(data):
                         m.compliant = False
                 break
         if not found:
-            print "ERROR, unknown motor ",data.name[i]
+            print("ERROR, unknown motor ",data.name[i])
 
         
 def usePrimitive(data, args):
@@ -79,9 +79,9 @@ def poppy_node():
         poppy = met()
 
     #set motors info as params
-    print "Robotis Mini joints:"
+    print("Robotis Mini joints:")
     for m in poppy.motors:
-        print m.name
+        print(m.name)
         rospy.set_param(rospy.get_name()+'/motor/'+m.name+'/id', m.id)
         rospy.set_param(rospy.get_name()+'/motor/'+m.name+'/model', m.model)
         rospy.set_param(rospy.get_name()+'/motor/'+m.name+'/direct', m.direct)
@@ -100,9 +100,9 @@ def poppy_node():
     rospy.Subscriber(rospy.get_name()+'/motors/write', JointState, JointStateWrite)   
     rospy.Subscriber('/robotis_mini/goal', JointState, JointStateWrite)   
     
-    print "Robotis Mini primitives:"
+    print ("Robotis Mini primitives:")
     for p in poppy.primitives:
-        print p.name
+        print(p.name)
         rospy.Subscriber(rospy.get_name()+'/primitive/'+p.name+'/start', String, usePrimitive, callback_args=[p.name, "start"])   
         rospy.Subscriber(rospy.get_name()+'/primitive/'+p.name+'/stop', String, usePrimitive, callback_args=[p.name, "stop"])  
 
